@@ -3,7 +3,7 @@ resources:
 - name: dominus
   type: git
   source:
-    uri: https://git@bitbucket.org/openaristos/dominus-service.git
+    uri: https://github.com/openaristos/dominus.git
     branch: master
 jobs:
 - name: build
