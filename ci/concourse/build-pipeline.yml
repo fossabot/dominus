@@ -1,0 +1,14 @@
+---
+resources:
+- name: dominus
+  type: git
+  source:
+    uri: https://git@bitbucket.org/openaristos/dominus-service.git
+    branch: master
+jobs:
+- name: build
+  plan:
+  - get: dominus
+    trigger: true
+  - task: build
+    file: dominus/ci/concourse/build-task.yml

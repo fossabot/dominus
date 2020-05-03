@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.openaristos.dominus";
+option java_outer_classname = "DominusProto";
+option objc_class_prefix = "DM";
+option go_package = "dominus";
+package io.openaristos.dominus;
+
+service Dominus {
+    rpc AppendEntityModel (EntityModel) returns (EntityModelSummary) {
+    }
+
+    rpc AppendEntity (MasterableEntity) returns (EntityResolution) {
+    }
+
+    rpc AppendRelationship (AppendRelationshipRequest) returns (AppendRelationshipResponse) {
+    }
+
+    rpc ResolveEntity (ResolveEntityRequest) returns (EntityResolution) {
+    }
+
+    rpc ResolveTraversal (TraversalRequest) returns (TraversalResponse) {
+    }
+}
+
+message AppendRelationshipRequest {
+    MasterableEntity source = 1;
+    MasterableEntity target = 2;
+    TemporalRelationship relationship = 3;
+}
+
+message AppendRelationshipResponse {
+    bool success = 1;
+}
+
+message EntityModel {
+    string entityType = 1;
+    repeated Attribute attributes = 2;
+    repeated Resolver resolvers = 3;
+}
+
+message ResolverSummary {
+
+}
+
+message EntityModelSummary {
+
+}
+
+message Descriptor {
+    string key = 1;
+    string value = 2;
+}
+
+message Attribute {
+    string name = 1;
+    string type = 2;
+    string matcher = 3;
+}
+
+message Resolver {
+    string name = 1;
+    uint32 weight = 2;
+    repeated Attribute attributes = 3;
+}
+
+message TemporalDescriptor {
+    string key = 1;
+    string value = 2;
+    repeated TimestampRange ranges = 3;
+}
+
+message TimestampRange {
+    uint64 start = 1;
+    uint64 end = 2;
+}
+
+message TemporalRelationship {
+    string relationship = 1;
+    repeated TimestampRange ranges = 3;
+}
+
+message MasterableEntityIdentity {
+    string uid = 1;
+    repeated Descriptor descriptors = 2;
+}
+
+message MasterableEntity {
+    string entityType = 1;
+    string perspective = 2;
+    MasterableEntityIdentity identity = 3;
+    repeated TemporalDescriptor descriptors = 4;
+}
+
+message MasterEntity {
+    string uid = 1;
+    repeated TemporalDescriptor descriptors = 2;
+    repeated MasterableEntity members = 3;
+}
+
+message AppendEntitySummary {
+
+}
+
+message ResolveEntityRequest {
+    string entityType = 1;
+    repeated Descriptor descriptors = 2;
+}
+
+message EntityResolution {
+    repeated EntityResolutionEntry entries = 1;
+}
+
+message MasterEntityMembership {
+
+}
+
+message EntityResolutionEntry {
+    MasterEntity masterEntity = 1;
+    repeated MasterEntityMembership memberships = 2;
+}
+
+message TraversalRequest {
+    string definition = 1;
+    uint64 effectiveStartDt = 2;
+    uint64 effectiveEndDt = 3;
+    map<string,string> context = 4;
+}
+
+message TraversalModifier {
+    string name = 1;
+}
+
+message TraversalResponse {
+    repeated TraversalResponseEntryGroup entries = 1;
+}
+
+message TraversalResponseEntryGroup {
+    repeated TraversalResponseEntry entries = 1;
+}
+
+message TraversalResponseEntry {
+    string uid = 1;
+    string alias = 2;
+    map<string, string> attributes = 3;
+    TimestampRange effectiveDating = 4;
+}
